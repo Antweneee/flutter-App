@@ -1,0 +1,229 @@
+import 'package:flutter/material.dart';
+import 'package:hair_appointment/sql_manipulation.dart';
+import 'service_page.dart';
+
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
+  @override
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController= TextEditingController();
+  TextEditingController phoneController= TextEditingController();
+  TextEditingController usernameController= TextEditingController();
+  TextEditingController passwordController= TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            height: double.infinity,
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.purple, Colors.blue],
+              ),
+            ),
+            child: const Padding(
+              padding: EdgeInsets.only(top: 60.0, left: 22),
+              child: Text(
+                'Register',
+                style: TextStyle(
+                  fontSize: 30,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 200.0),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
+                    ),
+                    color: Colors.white,
+                  ),
+                  height: MediaQuery.of(context).size.height - 200,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 20.0, right: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        TextFormField(
+                          controller: nameController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your name';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.check,
+                                color: Colors.grey,
+                              ),
+                              label: Text(
+                                'Name',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              )),
+                        ),
+                        TextFormField(
+                          controller: emailController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.check,
+                                color: Colors.grey,
+                              ),
+                              label: Text(
+                                'Email',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              )),
+                        ),
+                        TextFormField(
+                          controller: phoneController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your phone';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.check,
+                                color: Colors.grey,
+                              ),
+                              label: Text(
+                                'Phone',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              )),
+                        ),
+                        TextFormField(
+                          controller: usernameController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your username';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.check,
+                                color: Colors.grey,
+                              ),
+                              label: Text(
+                                'Username',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              )),
+                        ),
+                        TextFormField(
+                          obscureText: true,
+                          controller: passwordController,
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            return null;
+                          },
+                          decoration: const InputDecoration(
+                            suffixIcon: Icon(
+                              Icons.check,
+                              color: Colors.grey,
+                            ),
+                            label: Text(
+                              'Password',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            )),
+                        ),
+                        const SizedBox(height: 50),
+                        Container(
+                          height: 55,
+                          width: 300,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30),
+                            gradient: const LinearGradient(colors: [
+                              Colors.purple,
+                              Colors.blue,
+                            ]),
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                await SQLHelper.insertUser(name: nameController.text, email: emailController.text, phone: phoneController.text, username: usernameController.text, password: passwordController.text);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ServicesPage(
+                                      userName: usernameController.text,
+                                      password: passwordController.text,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors
+                                  .transparent, // Set to transparent to use the decoration gradient
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                'Register',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ]),
+      );
+  }
+}
